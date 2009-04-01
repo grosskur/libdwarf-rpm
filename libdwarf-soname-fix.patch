@@ -1,0 +1,13 @@
+--- dwarf-20090324-base/libdwarf/Makefile.in	2009-03-24 15:31:18.000000000 -0500
++++ dwarf-20090324/libdwarf/Makefile.in	2009-03-25 18:52:52.000000000 -0500
+@@ -127,8 +127,8 @@
+ libdwarf.a:	$(OBJS)
+ 	$(AR) $(ARFLAGS) $@ $(OBJS) 
+ 
+-libdwarf.so:	$(OBJS)
+-	$(CC) $(CFLAGS) -shared $(OBJS) -o $@
++libdwarf.so.0.0:	$(OBJS)
++	$(CC) $(CFLAGS) -shared $(OBJS) -Wl,-soname,libdwarf.so.0.0 -o $@
+ 
+ none:
+ 	echo "do nothing"

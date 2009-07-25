@@ -3,7 +3,7 @@
 Summary:       Library to access the DWARF Debugging file format 
 Name:          libdwarf
 Version:       0.%{upstreamid}
-Release:       4%{?dist}
+Release:       5%{?dist}
 License:       LGPLv2
 Group:         Development/Libraries
 URL:           http://reality.sgiweb.org/davea/dwarf.html
@@ -101,6 +101,9 @@ rm -rf %{buildroot}
 %{_bindir}/dwarfdump
 
 %changelog
+* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.20090324-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Tue Mar 31 2009 - Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 - 0.20090324-4
 - Adding _smp_mflags for libdwarf build

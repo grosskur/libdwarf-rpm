@@ -1,14 +1,13 @@
-%define   upstreamid 20090324
+%define   upstreamid 20100629
 
 Summary:       Library to access the DWARF Debugging file format 
 Name:          libdwarf
 Version:       0.%{upstreamid}
-Release:       5%{?dist}
+Release:       1%{?dist}
 License:       LGPLv2
 Group:         Development/Libraries
 URL:           http://reality.sgiweb.org/davea/dwarf.html
 
-#md5sum 4e603955797a1d5d314a9489a4342c24 (for 20090324)
 Source0:       http://reality.sgiweb.org/davea/%{name}-%{upstreamid}.tar.gz
 
 # This patch set up the proper soname
@@ -24,6 +23,12 @@ Group:         Development/Libraries
 Requires:      %{name} = %{version}-%{release}
 Requires:      elfutils-libelf
 
+%package static
+Summary:       Static libdwarf library
+License:       LGPLv2
+Group:         Development/Libraries
+Requires:      %{name}-devel = %{version}-%{release}
+
 %package tools
 Summary:       Tools for accessing DWARF debugging information
 License:       GPLv2
@@ -36,6 +41,9 @@ Library to access the DWARF debugging file format which supports
 source level debugging of a number of procedural languages, such as C, C++,
 and Fortran.  Please see http://www.dwarfstd.org for DWARF specification.
 
+%description static
+Static libdwarf library.
+
 %description devel
 Development package containing library and header files of libdwarf.
 
@@ -45,12 +53,12 @@ to access DWARF debug information.
 
 %prep
 %setup -q -n dwarf-%{upstreamid}
-%patch0 -p1 -b .soname-fix
+%patch0 -p0 -b .soname-fix
 
 %build
 pushd libdwarf
 %configure --enable-shared
-make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS -I. -fPIC" libdwarf.so.0.0
+make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS -I. -fPIC" libdwarf.so.0.0 libdwarf.a 
 ln -s libdwarf.so.0.0 libdwarf.so
 ln -s libdwarf.so.0.0 libdwarf.so.0
 popd
@@ -58,11 +66,11 @@ popd
 # Need to also configure dwarfdump since dwarfdump2 Makefile 
 # depends on dwarfdump's Makefile
 pushd dwarfdump
-%configure --enable-shared
+%configure 
 popd
 
 pushd dwarfdump2
-%configure --enable-shared
+%configure 
 # Note: %{?_smp_mflags} failed to build
 LD_LIBRARY_PATH="../libdwarf" make CFLAGS="$RPM_OPT_FLAGS -I. -fPIC" all
 popd
@@ -70,10 +78,12 @@ popd
 %install
 rm -rf %{buildroot}
 install -pDm 0644 libdwarf/dwarf.h         %{buildroot}%{_includedir}/libdwarf/dwarf.h
+install -pDm 0644 libdwarf/libdwarf.a      %{buildroot}%{_libdir}/libdwarf.a
+
 install -pDm 0644 libdwarf/libdwarf.h      %{buildroot}%{_includedir}/libdwarf/libdwarf.h
 install -pDm 0755 libdwarf/libdwarf.so.0.0 %{buildroot}%{_libdir}/libdwarf.so.0.0
-cp -pd libdwarf/libdwarf.so.0               %{buildroot}%{_libdir}/libdwarf.so.0
-cp -pd libdwarf/libdwarf.so                 %{buildroot}%{_libdir}/libdwarf.so
+cp -pd libdwarf/libdwarf.so.0              %{buildroot}%{_libdir}/libdwarf.so.0
+cp -pd libdwarf/libdwarf.so                %{buildroot}%{_libdir}/libdwarf.so
 install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 
 %clean
@@ -85,22 +95,29 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc libdwarf/README libdwarf/COPYING libdwarf/LIBDWARFCOPYRIGHT libdwarf/LGPL.txt
+%doc libdwarf/ChangeLog libdwarf/README libdwarf/COPYING libdwarf/LIBDWARFCOPYRIGHT libdwarf/LGPL.txt
 %{_libdir}/libdwarf.so.0*
+
+%files static
+%defattr(-,root,root,-)
+%{_libdir}/libdwarf.a
 
 %files devel
 %defattr(-,root,root,-)
-%doc libdwarf/README libdwarf/COPYING libdwarf/LIBDWARFCOPYRIGHT libdwarf/LGPL.txt
 %doc libdwarf/*.pdf
 %{_includedir}/libdwarf
 %{_libdir}/libdwarf.so
 
 %files tools
 %defattr(-,root,root,-)
-%doc dwarfdump2/README dwarfdump2/COPYING dwarfdump2/DWARFDUMPCOPYRIGHT dwarfdump2/GPL.txt
+%doc dwarfdump2/README dwarfdump2/ChangeLog dwarfdump2/COPYING dwarfdump2/DWARFDUMPCOPYRIGHT dwarfdump2/GPL.txt
 %{_bindir}/dwarfdump
 
 %changelog
+* Tue Jul 06 2010 Parag Nemade <paragn AT fedoraproject.org> - 0.20100629-1
+- Update to 20100629 release
+- Add -static subpackage as request in rh#586807
+
 * Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.20090324-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 

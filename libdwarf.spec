@@ -1,20 +1,18 @@
-%define   upstreamid 20100629
+%define   upstreamid 20110113
 
 Summary:       Library to access the DWARF Debugging file format 
 Name:          libdwarf
 Version:       0.%{upstreamid}
-Release:       2%{?dist}
+Release:       1%{?dist}
 License:       LGPLv2
 Group:         Development/Libraries
 URL:           http://reality.sgiweb.org/davea/dwarf.html
-
 Source0:       http://reality.sgiweb.org/davea/%{name}-%{upstreamid}.tar.gz
 
 # This patch set up the proper soname
 Patch0:        libdwarf-soname-fix.patch
 
 BuildRequires: binutils-devel elfutils-libelf-devel
-BuildRoot:     %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 %package devel
 Summary:       Library and header files of libdwarf
@@ -76,7 +74,6 @@ LD_LIBRARY_PATH="../libdwarf" make CFLAGS="$RPM_OPT_FLAGS -I. -fPIC" all
 popd
 
 %install
-rm -rf %{buildroot}
 install -pDm 0644 libdwarf/dwarf.h         %{buildroot}%{_includedir}/libdwarf/dwarf.h
 install -pDm 0644 libdwarf/libdwarf.a      %{buildroot}%{_libdir}/libdwarf.a
 
@@ -85,9 +82,6 @@ install -pDm 0755 libdwarf/libdwarf.so.0.0 %{buildroot}%{_libdir}/libdwarf.so.0.
 cp -pd libdwarf/libdwarf.so.0              %{buildroot}%{_libdir}/libdwarf.so.0
 cp -pd libdwarf/libdwarf.so                %{buildroot}%{_libdir}/libdwarf.so
 install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
-
-%clean
-rm -rf %{buildroot}
 
 %post -n libdwarf -p /sbin/ldconfig
 
@@ -114,6 +108,9 @@ rm -rf %{buildroot}
 %{_bindir}/dwarfdump
 
 %changelog
+* Wed Mar 09 2011 Parag Nemade <paragn AT fedoraproject DOT org> - 0.20110113-1
+- Update to 20110113 release
+
 * Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.20100629-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

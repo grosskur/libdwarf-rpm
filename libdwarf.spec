@@ -1,4 +1,4 @@
-%define   upstreamid 20110113
+%define   upstreamid 20110612
 
 Summary:       Library to access the DWARF Debugging file format 
 Name:          libdwarf
@@ -108,6 +108,9 @@ install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 %{_bindir}/dwarfdump
 
 %changelog
+* Wed Jul 13 2011 Parag Nemade <paragn AT fedoraproject DOT org> - 0.20110612-1
+- Update to 20110612 release
+
 * Wed Mar 09 2011 Parag Nemade <paragn AT fedoraproject DOT org> - 0.20110113-1
 - Update to 20110113 release
 

@@ -3,7 +3,7 @@
 Summary:       Library to access the DWARF Debugging file format 
 Name:          libdwarf
 Version:       0.%{upstreamid}
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2
 Group:         Development/Libraries
 URL:           http://reality.sgiweb.org/davea/dwarf.html
@@ -108,6 +108,9 @@ install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 %{_bindir}/dwarfdump
 
 %changelog
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.20110612-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Wed Jul 13 2011 Parag Nemade <paragn AT fedoraproject DOT org> - 0.20110612-1
 - Update to 20110612 release
 

@@ -1,13 +1,12 @@
-%define   upstreamid 20110612
-
-Summary:       Library to access the DWARF Debugging file format 
 Name:          libdwarf
-Version:       0.%{upstreamid}
-Release:       3%{?dist}
-License:       LGPLv2
+Version:       20120410
+Release:       1%{?dist}
+Summary:       Library to access the DWARF Debugging file format 
 Group:         Development/Libraries
+
+License:       LGPLv2
 URL:           http://reality.sgiweb.org/davea/dwarf.html
-Source0:       http://reality.sgiweb.org/davea/%{name}-%{upstreamid}.tar.gz
+Source0:       http://reality.sgiweb.org/davea/%{name}-%{version}.tar.gz
 
 # This patch set up the proper soname
 Patch0:        libdwarf-soname-fix.patch
@@ -16,23 +15,21 @@ BuildRequires: binutils-devel elfutils-libelf-devel
 
 %package devel
 Summary:       Library and header files of libdwarf
-License:       LGPLv2
 Group:         Development/Libraries
+License:       LGPLv2
 Requires:      %{name} = %{version}-%{release}
-Requires:      elfutils-libelf
 
 %package static
 Summary:       Static libdwarf library
-License:       LGPLv2
 Group:         Development/Libraries
+License:       LGPLv2
 Requires:      %{name}-devel = %{version}-%{release}
 
 %package tools
 Summary:       Tools for accessing DWARF debugging information
-License:       GPLv2
 Group:         Development/Tools
+License:       GPLv2
 Requires:      %{name} = %{version}-%{release}
-Requires:      elfutils-libelf
 
 %description
 Library to access the DWARF debugging file format which supports
@@ -50,7 +47,7 @@ C++ version of dwarfdump (dwarfdump2) command-line utilities
 to access DWARF debug information.
 
 %prep
-%setup -q -n dwarf-%{upstreamid}
+%setup -q -n dwarf-%{version}
 %patch0 -p0 -b .soname-fix
 
 %build
@@ -88,26 +85,27 @@ install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 %postun -n libdwarf -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %doc libdwarf/ChangeLog libdwarf/README libdwarf/COPYING libdwarf/LIBDWARFCOPYRIGHT libdwarf/LGPL.txt
 %{_libdir}/libdwarf.so.0*
 
 %files static
-%defattr(-,root,root,-)
 %{_libdir}/libdwarf.a
 
 %files devel
-%defattr(-,root,root,-)
 %doc libdwarf/*.pdf
 %{_includedir}/libdwarf
 %{_libdir}/libdwarf.so
 
 %files tools
-%defattr(-,root,root,-)
 %doc dwarfdump2/README dwarfdump2/ChangeLog dwarfdump2/COPYING dwarfdump2/DWARFDUMPCOPYRIGHT dwarfdump2/GPL.txt
 %{_bindir}/dwarfdump
 
 %changelog
+* Fri Jul 13 2012 Tom Hughes <tom@compton.nu> - 20120410-1
+- Update to 20120410 release
+- Drop the 0. from the version - the dates are the upstream versions
+- Remove explicit dependencies on elfutils-libelf
+
 * Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.20110612-3
 - Rebuilt for c++ ABI breakage
 
@@ -152,4 +150,3 @@ install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 * Wed Mar 25 2009 - Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 - 20090324-1
 - Initial Revision
-

@@ -1,6 +1,6 @@
 Name:          libdwarf
-Version:       20120410
-Release:       2%{?dist}
+Version:       20121127
+Release:       1%{?dist}
 Summary:       Library to access the DWARF Debugging file format 
 Group:         Development/Libraries
 
@@ -101,6 +101,9 @@ install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 %{_bindir}/dwarfdump
 
 %changelog
+* Thu Nov 29 2012 Tom Hughes <tom@compton.nu> - 20121127-1
+- Update to 20121127 release
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20120410-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

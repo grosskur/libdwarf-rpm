@@ -1,5 +1,5 @@
 Name:          libdwarf
-Version:       20121127
+Version:       20121130
 Release:       1%{?dist}
 Summary:       Library to access the DWARF Debugging file format 
 Group:         Development/Libraries
@@ -101,6 +101,9 @@ install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 %{_bindir}/dwarfdump
 
 %changelog
+* Mon Dec  3 2012 Tom Hughes <tom@compton.nu> - 20121130-1
+- Update to 20121130 release
+
 * Thu Nov 29 2012 Tom Hughes <tom@compton.nu> - 20121127-1
 - Update to 20121127 release
 

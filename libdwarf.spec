@@ -1,5 +1,9 @@
+%define soversion 1
+%define soname libdwarf.so.%{soversion}
+%define sofullname libdwarf.so.%{soversion}.%{version}.0
+
 Name:          libdwarf
-Version:       20121130
+Version:       20130125
 Release:       1%{?dist}
 Summary:       Library to access the DWARF Debugging file format 
 Group:         Development/Libraries
@@ -7,9 +11,6 @@ Group:         Development/Libraries
 License:       LGPLv2
 URL:           http://reality.sgiweb.org/davea/dwarf.html
 Source0:       http://reality.sgiweb.org/davea/%{name}-%{version}.tar.gz
-
-# This patch set up the proper soname
-Patch0:        libdwarf-soname-fix.patch
 
 BuildRequires: binutils-devel elfutils-libelf-devel
 
@@ -48,14 +49,15 @@ to access DWARF debug information.
 
 %prep
 %setup -q -n dwarf-%{version}
-%patch0 -p0 -b .soname-fix
+mv libdwarf/Makefile.in libdwarf/Makefile.in.orig
+sed -e 's/^libdwarf.so:/%{sofullname}:/' -e 's/-shared $(OBJS)/-shared $(OBJS) -Wl,-soname,%{soname}/' < libdwarf/Makefile.in.orig > libdwarf/Makefile.in
 
 %build
 pushd libdwarf
 %configure --enable-shared
-make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS -I. -fPIC" libdwarf.so.0.0 libdwarf.a 
-ln -s libdwarf.so.0.0 libdwarf.so
-ln -s libdwarf.so.0.0 libdwarf.so.0
+make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS -I. -fPIC" %{sofullname} libdwarf.a 
+ln -s %{sofullname} libdwarf.so
+ln -s %{sofullname} %{soname}
 popd
 
 # Need to also configure dwarfdump since dwarfdump2 Makefile 
@@ -75,8 +77,8 @@ install -pDm 0644 libdwarf/dwarf.h         %{buildroot}%{_includedir}/libdwarf/d
 install -pDm 0644 libdwarf/libdwarf.a      %{buildroot}%{_libdir}/libdwarf.a
 
 install -pDm 0644 libdwarf/libdwarf.h      %{buildroot}%{_includedir}/libdwarf/libdwarf.h
-install -pDm 0755 libdwarf/libdwarf.so.0.0 %{buildroot}%{_libdir}/libdwarf.so.0.0
-cp -pd libdwarf/libdwarf.so.0              %{buildroot}%{_libdir}/libdwarf.so.0
+install -pDm 0755 libdwarf/%{sofullname}   %{buildroot}%{_libdir}/%{sofullname}
+cp -pd libdwarf/%{soname}                  %{buildroot}%{_libdir}/%{soname}
 cp -pd libdwarf/libdwarf.so                %{buildroot}%{_libdir}/libdwarf.so
 install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 
@@ -86,7 +88,7 @@ install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 
 %files
 %doc libdwarf/ChangeLog libdwarf/README libdwarf/COPYING libdwarf/LIBDWARFCOPYRIGHT libdwarf/LGPL.txt
-%{_libdir}/libdwarf.so.0*
+%{_libdir}/libdwarf.so.*
 
 %files static
 %{_libdir}/libdwarf.a
@@ -101,6 +103,10 @@ install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 %{_bindir}/dwarfdump
 
 %changelog
+* Sat Jan 26 2013 Tom Hughes <tom@compton.nu> - 20130125-1
+- Update to 20130125 release
+- Bump soname to libdwarf.so.1
+
 * Mon Dec  3 2012 Tom Hughes <tom@compton.nu> - 20121130-1
 - Update to 20121130 release
 

@@ -11,6 +11,7 @@ Group:         Development/Libraries
 License:       LGPLv2
 URL:           http://reality.sgiweb.org/davea/dwarf.html
 Source0:       http://reality.sgiweb.org/davea/%{name}-%{version}.tar.gz
+Patch0:        libdwarf-soname.patch
 
 BuildRequires: binutils-devel elfutils-libelf-devel
 
@@ -49,12 +50,11 @@ to access DWARF debug information.
 
 %prep
 %setup -q -n dwarf-%{version}
-mv libdwarf/Makefile.in libdwarf/Makefile.in.orig
-sed -e 's/-shared $(OBJS)/-shared $(OBJS) -Wl,-soname,%{soname}/' < libdwarf/Makefile.in.orig > libdwarf/Makefile.in
+%patch0 -p1 -b .soname
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" %configure --enable-shared
-make %{?_smp_mflags}
+LD_LIBRARY_PATH="../libdwarf" make %{?_smp_mflags} SONAME="%{soname}"
 
 %install
 install -pDm 0644 libdwarf/dwarf.h         %{buildroot}%{_includedir}/libdwarf/dwarf.h

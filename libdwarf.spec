@@ -3,7 +3,7 @@
 %define sofullname libdwarf.so.%{soversion}.%{version}.0
 
 Name:          libdwarf
-Version:       20130126
+Version:       20130207
 Release:       1%{?dist}
 Summary:       Library to access the DWARF Debugging file format 
 Group:         Development/Libraries
@@ -50,36 +50,20 @@ to access DWARF debug information.
 %prep
 %setup -q -n dwarf-%{version}
 mv libdwarf/Makefile.in libdwarf/Makefile.in.orig
-sed -e 's/^libdwarf.so:/%{sofullname}:/' -e 's/-shared $(OBJS)/-shared $(OBJS) -Wl,-soname,%{soname}/' < libdwarf/Makefile.in.orig > libdwarf/Makefile.in
+sed -e 's/-shared $(OBJS)/-shared $(OBJS) -Wl,-soname,%{soname}/' < libdwarf/Makefile.in.orig > libdwarf/Makefile.in
 
 %build
-pushd libdwarf
-%configure --enable-shared
-make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS -I. -fPIC" %{sofullname} libdwarf.a 
-ln -s %{sofullname} libdwarf.so
-ln -s %{sofullname} %{soname}
-popd
-
-# Need to also configure dwarfdump since dwarfdump2 Makefile 
-# depends on dwarfdump's Makefile
-pushd dwarfdump
-%configure 
-popd
-
-pushd dwarfdump2
-%configure 
-# Note: %{?_smp_mflags} failed to build
-LD_LIBRARY_PATH="../libdwarf" make CFLAGS="$RPM_OPT_FLAGS -I. -fPIC" all
-popd
+CFLAGS="$RPM_OPT_FLAGS" %configure --enable-shared
+make %{?_smp_mflags}
 
 %install
 install -pDm 0644 libdwarf/dwarf.h         %{buildroot}%{_includedir}/libdwarf/dwarf.h
 install -pDm 0644 libdwarf/libdwarf.a      %{buildroot}%{_libdir}/libdwarf.a
 
 install -pDm 0644 libdwarf/libdwarf.h      %{buildroot}%{_includedir}/libdwarf/libdwarf.h
-install -pDm 0755 libdwarf/%{sofullname}   %{buildroot}%{_libdir}/%{sofullname}
-cp -pd libdwarf/%{soname}                  %{buildroot}%{_libdir}/%{soname}
-cp -pd libdwarf/libdwarf.so                %{buildroot}%{_libdir}/libdwarf.so
+install -pDm 0755 libdwarf/libdwarf.so     %{buildroot}%{_libdir}/%{sofullname}
+ln      -s        %{sofullname}            %{buildroot}%{_libdir}/%{soname}
+ln      -s        %{sofullname}            %{buildroot}%{_libdir}/libdwarf.so
 install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 
 %post -n libdwarf -p /sbin/ldconfig
@@ -103,6 +87,9 @@ install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 %{_bindir}/dwarfdump
 
 %changelog
+* Fri Feb  8 2013 Tom Hughes <tom@compton.nu> - 20130207-1
+- Update to 20130207 release
+
 * Sun Jan 27 2013 Tom Hughes <tom@compton.nu> - 20130126-1
 - Update to 20130126 release
 - Revert soname to libdwarf.so.0

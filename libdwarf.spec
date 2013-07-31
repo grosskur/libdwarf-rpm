@@ -3,7 +3,7 @@
 %define sofullname libdwarf.so.%{soversion}.%{version}.0
 
 Name:          libdwarf
-Version:       20130207
+Version:       20130729
 Release:       1%{?dist}
 Summary:       Library to access the DWARF Debugging file format 
 Group:         Development/Libraries
@@ -87,6 +87,9 @@ install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 %{_bindir}/dwarfdump
 
 %changelog
+* Wed Jul 31 2013 Tom Hughes <tom@compton.nu> - 20130729-1
+- Update to 20130729 release
+
 * Fri Feb  8 2013 Tom Hughes <tom@compton.nu> - 20130207-1
 - Update to 20130207 release
 

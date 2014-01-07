@@ -4,13 +4,13 @@
 
 Name:          libdwarf
 Version:       20130729
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Library to access the DWARF Debugging file format 
 Group:         Development/Libraries
 
 License:       LGPLv2
-URL:           http://reality.sgiweb.org/davea/dwarf.html
-Source0:       http://reality.sgiweb.org/davea/%{name}-%{version}.tar.gz
+URL:           http://www.prevanders.net/dwarf.html
+Source0:       http://www.prevanders.net/%{name}-%{version}.tar.gz
 Patch0:        libdwarf-soname.patch
 
 BuildRequires: binutils-devel elfutils-libelf-devel
@@ -87,6 +87,9 @@ install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 %{_bindir}/dwarfdump
 
 %changelog
+* Tue Jan  7 2014 Tom Hughes <tom@compton.nu> - 20130729-2
+- Update upstream URLs to point at new site
+
 * Wed Jul 31 2013 Tom Hughes <tom@compton.nu> - 20130729-1
 - Update to 20130729 release
 

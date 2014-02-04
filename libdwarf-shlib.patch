@@ -12,7 +12,7 @@ index 76add35..1876507 100644
 +	ln -s $(SONAME) $@
 +
 +$(SONAME): dwarf_names.h dwarf_names.c $(OBJS) dwarf_names.o
-+	$(CC) $(CFLAGS) -shared $(OBJS) -Wl,-soname,$(SONAME)  dwarf_names.o -o $@
++	$(CC) $(CFLAGS) -shared $(OBJS) -Wl,-soname,$(SONAME)  dwarf_names.o -lelf -o $@
  
  none:
  	echo "do nothing"

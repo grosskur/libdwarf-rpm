@@ -4,14 +4,14 @@
 
 Name:          libdwarf
 Version:       20140131
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Library to access the DWARF Debugging file format 
 Group:         Development/Libraries
 
 License:       LGPLv2
 URL:           http://www.prevanders.net/dwarf.html
 Source0:       http://www.prevanders.net/%{name}-%{version}.tar.gz
-Patch0:        libdwarf-soname.patch
+Patch0:        libdwarf-shlib.patch
 
 BuildRequires: binutils-devel elfutils-libelf-devel
 
@@ -50,7 +50,7 @@ to access DWARF debug information.
 
 %prep
 %setup -q -n dwarf-%{version}
-%patch0 -p1 -b .soname
+%patch0 -p1 -b .shlib
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" %configure --enable-shared
@@ -87,6 +87,9 @@ install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 %{_bindir}/dwarfdump
 
 %changelog
+* Tue Feb  4 2014 Tom Hughes <tom@compton.nu> - 20140131-2
+- Link libdwarf.so with libelf
+
 * Sun Feb  2 2014 Tom Hughes <tom@compton.nu> - 20140131-1
 - Update to 20140131 upstream release
 

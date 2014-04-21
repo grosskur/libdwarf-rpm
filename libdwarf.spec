@@ -1,37 +1,61 @@
+%global p_vendor         hhvm
+%define _name            libdwarf
+
+%if 0%{?p_vendor:1}
+  %global _orig_prefix   %{_prefix}
+  %global name_prefix    %{p_vendor}-
+
+  # Use the alternate locations for things.
+  %define _lib            lib 
+  %global _real_initrddir %{_initrddir}
+  %global _sysconfdir     %{_sysconfdir}/hhvm
+  %define _prefix         /opt/hhvm
+  %define _libdir         %{_prefix}/lib
+  %define _mandir         %{_datadir}/man
+%endif
+
 %define soversion 0
 %define soname libdwarf.so.%{soversion}
 %define sofullname libdwarf.so.%{soversion}.%{version}.0
 
-Name:          libdwarf
+Name:          %{?name_prefix}%{_name}
 Version:       20140413
-Release:       1%{?dist}
+Release:       1.hhvm%{?dist}
 Summary:       Library to access the DWARF Debugging file format 
 Group:         Development/Libraries
 
 License:       LGPLv2
 URL:           http://www.prevanders.net/dwarf.html
-Source0:       http://www.prevanders.net/%{name}-%{version}.tar.gz
+Source0:       http://www.prevanders.net/%{_name}-%{version}.tar.gz
 Patch0:        libdwarf-shlib.patch
 
 BuildRequires: binutils-devel elfutils-libelf-devel
+# Don't provide un-namespaced libraries inside rpm database
+AutoReqProv: 0
 
 %package devel
 Summary:       Library and header files of libdwarf
 Group:         Development/Libraries
 License:       LGPLv2
 Requires:      %{name} = %{version}-%{release}
+# Don't provide un-namespaced libraries inside rpm database
+AutoReqProv: 0
 
 %package static
 Summary:       Static libdwarf library
 Group:         Development/Libraries
 License:       LGPLv2
 Requires:      %{name}-devel = %{version}-%{release}
+# Don't provide un-namespaced libraries inside rpm database
+AutoReqProv: 0
 
 %package tools
 Summary:       Tools for accessing DWARF debugging information
 Group:         Development/Tools
 License:       GPLv2
 Requires:      %{name} = %{version}-%{release}
+# Don't provide un-namespaced libraries inside rpm database
+AutoReqProv: 0
 
 %description
 Library to access the DWARF debugging file format which supports
@@ -66,9 +90,9 @@ ln      -s        %{sofullname}            %{buildroot}%{_libdir}/%{soname}
 ln      -s        %{sofullname}            %{buildroot}%{_libdir}/libdwarf.so
 install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 
-%post -n libdwarf -p /sbin/ldconfig
+%post -n %{name} -p /sbin/ldconfig
 
-%postun -n libdwarf -p /sbin/ldconfig
+%postun -n %{name} -p /sbin/ldconfig
 
 %files
 %doc libdwarf/ChangeLog libdwarf/README libdwarf/COPYING libdwarf/LIBDWARFCOPYRIGHT libdwarf/LGPL.txt
